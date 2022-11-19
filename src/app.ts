@@ -1,3 +1,6 @@
+/* eslint-disable no-redeclare */
+
+
 showHello('greeting', 'TypeScript!');
 
 function showHello(divName: string, name: string) {
@@ -31,19 +34,20 @@ function  getAllBooks(): readonly Book[] {
     return books;
 }
 
-function logFirstAvailable(books: readonly Book[]): void{
+function logFirstAvailable(books: readonly Book[] = getAllBooks()): void{
     // const title: string = books.find(book => book.available).title;
     const title: string = books.find(({available}) => available)?.title;
     console.log(`Number of books: ${books.length} and first availible book is - ${title}`);
 }
 
-function getBookTitlesByCategory(inputCategory: Category): string[] {
+function getBookTitlesByCategory(inputCategory: Category = Category.JavaScript): string[] {
     const books = getAllBooks();
 
     return books
         .filter(({category}) => category === inputCategory)
         .map(({ title }) => title);
 }
+
 
 function logBookTitles(titles: Array<string>): void {
     titles.forEach(title => console.log(title));
@@ -69,6 +73,39 @@ function calcTotalPages(): void {
     console.log(total);
 }
 
+function getBookByID(inputID: number): string{
+    const books = getAllBooks();
+    const title: string = books.find(({id}) => id === inputID).title;
+    return title;
+}
+
+function checkoutBooks(customer: string, ...bookIDs: number []): string[]{
+    let titles = [];
+    if (bookIDs) {
+        const books = getAllBooks();
+        const availableBook = books.filter(({available}) => available === true);
+        bookIDs.forEach(item => {
+            if (availableBook.find(({title})=> title === getBookByID(item))) {
+                titles.push(getBookByID(item));
+            }
+        });
+    }
+    console.log(customer);
+    return titles;
+}
+
+let myBooks = checkoutBooks('Ann', 1, 2, 4);
+
+// console.log(myBooks);
+
+
+// function getTitles(): {
+
+// }
+
+// console.log(getBookByID(1));
+// console.log(logFirstAvailable());
+// console.log(getBookTitlesByCategory());
 // Task 02.01
 // console.log(getAllBooks());
 // logFirstAvailable(getAllBooks());
@@ -79,4 +116,36 @@ function calcTotalPages(): void {
 
 // console.log(getBookAuthorByIndex(2));
 
-calcTotalPages();
+// calcTotalPages();
+
+// Task 03.01 Function types
+
+function createCustomerID(name: string, id: number): string {
+    return `${name} ${id}`;
+}
+
+let myID: string = createCustomerID('Ann', 10);
+
+// console.log(myID);
+
+// let idGenerator: (name: string, id: number) => string;
+let idGenerator: typeof createCustomerID;
+idGenerator = (name: string, id: number) => `${name} ${id}`;
+
+// console.log(idGenerator('Vitalii', 1));
+
+// Task 03.02 Parameters
+
+function createCustomer(name: string, age?: number, city?: string): void {
+    console.log(`Name: ${name}`);
+    if (age) {
+        console.log(`Age: ${age}`);
+    }
+    if (city) {
+        console.log(`City: ${city}`);
+    }
+}
+
+// createCustomer('Ann');
+// createCustomer('Ann', 20);
+// createCustomer('Ann', 20 ,'dhd');
