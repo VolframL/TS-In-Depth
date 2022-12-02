@@ -1,6 +1,5 @@
 /* eslint-disable no-redeclare */
 
-
 showHello('greeting', 'TypeScript!');
 
 function showHello(divName: string, name: string) {
@@ -14,7 +13,15 @@ enum Category {
 }
 
 
-type Book = {
+// type Book = {
+//     id: number;
+//     title: string;
+//     author: string;
+//     available: boolean;
+//     category: Category;
+// };
+
+interface Book {
     id: number;
     title: string;
     author: string;
@@ -29,7 +36,7 @@ function  getAllBooks(): readonly Book[] {
         { id: 2, title: 'JavaScript Testing', category: Category.JavaScript, author: 'Liang Yuxian Eugene', available:
         false },
         { id: 3, title: 'CSS Secrets', category: Category.CSS, author: 'Lea Verou', available: true },
-        { id: 4, title: 'Mastering JavaScript Object-Oriented Programming', category: Category.JavaScript, author: 'AndreaChiarelli', available: true }
+        { id: 4, title: 'Mastering JavaScript Object-Oriented Programming', category: Category.JavaScript, author: 'AndreaChiarelli', available: false }
     ];
     return books;
 }
@@ -94,47 +101,9 @@ function checkoutBooks(customer: string, ...bookIDs: number []): string[]{
     return titles;
 }
 
-let myBooks = checkoutBooks('Ann', 1, 2, 4);
-
-// console.log(myBooks);
-
-
-// function getTitles(): {
-
-// }
-
-// console.log(getBookByID(1));
-// console.log(logFirstAvailable());
-// console.log(getBookTitlesByCategory());
-// Task 02.01
-// console.log(getAllBooks());
-// logFirstAvailable(getAllBooks());
-
-
-// logBookTitles(getBookTitlesByCategory(0));
-// logBookTitles(getBookTitlesByCategory(Category.JavaScript));
-
-// console.log(getBookAuthorByIndex(2));
-
-// calcTotalPages();
-
-// Task 03.01 Function types
-
 function createCustomerID(name: string, id: number): string {
     return `${name} ${id}`;
 }
-
-let myID: string = createCustomerID('Ann', 10);
-
-// console.log(myID);
-
-// let idGenerator: (name: string, id: number) => string;
-let idGenerator: typeof createCustomerID;
-idGenerator = (name: string, id: number) => `${name} ${id}`;
-
-// console.log(idGenerator('Vitalii', 1));
-
-// Task 03.02 Parameters
 
 function createCustomer(name: string, age?: number, city?: string): void {
     console.log(`Name: ${name}`);
@@ -146,6 +115,78 @@ function createCustomer(name: string, age?: number, city?: string): void {
     }
 }
 
+function getTitles(author: string): string[];
+function getTitles(available: boolean): string[];
+function getTitles(id: number, available: boolean): string[];
+function getTitles(...args: [string | boolean] | [number, boolean]): string[] {
+    const books = getAllBooks();
+
+    if (args.length === 1) {
+        const [arg] = args;
+
+        if (typeof arg === 'string') {
+            return books.filter(book => book.author === arg).map(book => book.title);
+        } else if (typeof arg === 'boolean') {
+            return books.filter(book => book.available === arg).map(book => book.title);
+        }
+    } else if (args.length === 2) {
+        const [id, available] = args;
+
+        if (typeof id === 'number' && typeof available === 'boolean') {
+            return books.filter(book => book.id === id && book.available === available).map(book => book.title);
+        }
+    }
+}
+
+function assertStringValue(value: any): asserts value is string {
+    if (typeof value !== 'string') {
+        throw new TypeError('value should have been a string');
+    }
+}
+
+function bookTitleTransform(title: any): string {
+    assertStringValue(title);
+    return [...title].reverse().join('');
+}
+
+
+// Task 02.01 Basic types
+// console.log(logFirstAvailable());
+// console.log(getBookTitlesByCategory(1));
+// logBookTitles(getBookTitlesByCategory(1));
+// console.log(getBookAuthorByIndex(2));
+// calcTotalPages();
+
+
+// Task 03.01 Function types
+// let myID: string = createCustomerID('Ann', 10);
+// console.log(myID);
+// let idGenerator: (name: string, id: number) => string;
+// let idGenerator: typeof createCustomerID;
+// idGenerator = createCustomerID;
+// console.log(idGenerator('Emma', 13));
+
+
+// Task 03.02 Optional, Default and Rest parameters
 // createCustomer('Ann');
 // createCustomer('Ann', 20);
-// createCustomer('Ann', 20 ,'dhd');
+// createCustomer('Ann', 20 ,'Kyiv');
+// let myBooks = checkoutBooks('Ann', 1, 2, 4);
+// console.log(myBooks);
+
+
+// Task 03.03 Function Overloading
+// console.log(getTitles(1, true));
+// console.log(getTitles(true));
+// console.log(getTitles(false));
+// console.log(getTitles(2, false));
+// console.log(getTitles('Lea Verou'));
+
+
+// Task 03.04 Assertion Functions
+// console.log(bookTitleTransform('Title'));
+// console.log(bookTitleTransform(454));
+// console.log(bookTitleTransform('Vitalii'));
+
+
+// Task 04.01 Interfaces
