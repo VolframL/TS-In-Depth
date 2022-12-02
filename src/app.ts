@@ -21,13 +21,37 @@ enum Category {
 //     category: Category;
 // };
 
+type BookProperties = keyof Book | 'isbn';
 interface Book {
     id: number;
     title: string;
     author: string;
     available: boolean;
     category: Category;
+    pages?: number;
+    // markDamaged?: (reason: string) => void;
+    // markDamaged?(reason: string): void;
+    markDamaged?: DamageLogger;
 };
+interface DamageLogger {
+    (data: string): void;
+}
+
+interface Person {
+    name: string;
+    email: string;
+}
+
+interface Author extends Person{
+    numBooksPublished: number;
+}
+
+interface Librarian extends Person {
+    department: string;
+    assistCustomer: (custName: string, bookTitle: string) => void;
+}
+
+
 
 function  getAllBooks(): readonly Book[] {
     const books = <const> [
@@ -80,25 +104,18 @@ function calcTotalPages(): void {
     console.log(total);
 }
 
-function getBookByID(inputID: number): string{
+function getBookByID(inputID: Book['id']): Book | undefined{
     const books = getAllBooks();
-    const title: string = books.find(({id}) => id === inputID).title;
-    return title;
+    return books.find(book => book.id === inputID);
 }
 
 function checkoutBooks(customer: string, ...bookIDs: number []): string[]{
-    let titles = [];
-    if (bookIDs) {
-        const books = getAllBooks();
-        const availableBook = books.filter(({available}) => available === true);
-        bookIDs.forEach(item => {
-            if (availableBook.find(({title})=> title === getBookByID(item))) {
-                titles.push(getBookByID(item));
-            }
-        });
-    }
-    console.log(customer);
-    return titles;
+    console.log(`Customer name: ${customer}`);
+
+    return bookIDs
+        .map(id => getBookByID(id))
+        .filter(book => book.available)
+        .map(book => book.title);
 }
 
 function createCustomerID(name: string, id: number): string {
@@ -149,6 +166,15 @@ function bookTitleTransform(title: any): string {
     return [...title].reverse().join('');
 }
 
+function printBook(book: Book): void {
+    console.log(`${book.title} ${book.author}`);
+}
+
+function getProperty(book: Book, bookProperty: BookProperties ): any {
+    const value = book[bookProperty];
+
+    return typeof value === 'function' ? value.name : value;
+}
 
 // Task 02.01 Basic types
 // console.log(logFirstAvailable());
@@ -190,3 +216,60 @@ function bookTitleTransform(title: any): string {
 
 
 // Task 04.01 Interfaces
+// const myBook: Book = {
+//     id: 5,
+//     title: 'Colors, Backgrounds, and Gradients',
+//     author: 'Eric A. Meyer',
+//     available: true,
+//     category: Category.CSS,
+//     pages: 200,
+//     // markDamaged: (reason: string) => console.log(`Damaged: ${reason}`)
+//     markDamaged(reason: string){
+//         console.log(`Damaged: ${reason}`);
+//     }
+// };
+// printBook(myBook);
+// myBook.markDamaged('missing back cover');
+
+
+// Task 04.02. Defining an Interface for Function Types
+// const logDamage: DamageLogger = (reason: string) => console.log(`Damaged: ${reason}`);
+// logDamage('missing front cover');
+
+
+// Task 04.03. Extending Interface
+// const favoriteAuthor: Author = {
+//     name: 'Lue Verou',
+//     email: 'email@email.com',
+//     numBooksPublished: 5000
+// };
+
+// const favoriteLibrarian: Librarian = {
+//     name: 'Vasia',
+//     email: 'com@ema.il',
+//     department: 'Kyiv',
+//     assistCustomer: null
+// };
+
+
+// Task 04.04. Optional Chaining
+// const offer: any = {
+//     book: {
+//         title: 'Essential TypeScript',
+//     },
+// };
+
+// console.log(offer.magazine);
+// console.log(offer.magazine?.getTitle());
+// console.log(offer.book.getTitle?.());
+// console.log(offer.book.authors?.[0]);
+
+
+// Task 04.05. Keyof Operator
+// console.log(getProperty(myBook, 'title'));
+// console.log(getProperty(myBook, 'markDamaged'));
+// console.log(getProperty(myBook, 'isbn'));
+
+
+// Task 05.01. Creating and Using Classes
+
