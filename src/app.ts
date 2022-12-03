@@ -271,5 +271,62 @@ function getProperty(book: Book, bookProperty: BookProperties ): any {
 // console.log(getProperty(myBook, 'isbn'));
 
 
+
+//
+// Classes Task 05
+//
+
+
 // Task 05.01. Creating and Using Classes
 
+class ReferenceItem {
+    // title: string;
+    // year: number;
+    // constructor(newTitle: string, newYear: number) {
+    //     this.title = newTitle;
+    //     this.year = newYear;
+    //     console.log('Creating a new ReferenceItem...');
+    // }
+    private id: number;
+
+    static department: string = 'dptmt';
+
+    constructor(public title: string, protected year: number, id: number) {
+        this.title = title;
+        this.year = year;
+        this.id = id;
+    }
+    printItem(): void {
+        // console.log('title was published in year');
+        console.log(ReferenceItem.department);
+    }
+    _publisher!: string;
+    get publisher(): string {
+        return this._publisher.toUpperCase();
+    }
+    set publisher(newPublisher: string) {
+        this._publisher = newPublisher;
+    }
+    getID(): number {
+        return this.id;
+    }
+}
+
+class Encyclopedia extends ReferenceItem {
+    edition: number;
+}
+
+// const ref = new ReferenceItem('Its title', 2022, 10);
+// ref.printItem();
+// ref.publisher = 'Slava Ukraini';
+// console.log(ref.publisher);
+// console.log(ref.getID());
+// console.log(ref);
+
+const refBook = new Encyclopedia('Encyc', 2020, 3);
+refBook.printItem();
+console.log(refBook.title);
+refBook.printItem = () => {
+    console.log(ReferenceItem.department);
+    console.log(`Edition:edition ${Encyclopedia.year}`);
+};
