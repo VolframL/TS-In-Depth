@@ -177,7 +177,7 @@ function getProperty(book: Book, bookProperty: BookProperties ): any {
     return typeof value === 'function' ? value.name : value;
 }
 
-class ReferenceItem {
+abstract class ReferenceItem {
     // title: string;
     // year: number;
     // constructor(newTitle: string, newYear: number) {
@@ -206,7 +206,7 @@ class ReferenceItem {
         this.#id = id;
     }
     printItem(): void {
-        // console.log(`${this.title} was published in ${this.year}`);
+        console.log(`${this.title} was published in ${this.year}`);
         console.log(ReferenceItem.department);
         console.log(Object.getPrototypeOf(this).constructor.department);
     }
@@ -214,20 +214,43 @@ class ReferenceItem {
     getID(): number {
         return this.#id;
     }
+
+    abstract printCitation(): void;
 }
 
 class Encyclopedia extends ReferenceItem {
     constructor(id: number, title: string, year: number, public edition: number) {
         super(id, title, year);
-        this.edition = edition;
     }
 
     override printItem(): void {
-        console.log(Object.getPrototypeOf(this).constructor.department);
+        super.printItem();
+        // console.log(Object.getPrototypeOf(this).constructor.department);
         console.log(`Edition:${this.edition} ${this.year}`);
     }
 
+    printCitation(): void {
+        console.log(`${this.title} - ${this.year}`);
+    }
+
 }
+
+// interface A {
+//     a: number;
+// }
+class UniversityLibrarian implements Librarian /* , A */ {
+    name: string;
+    email: string;
+    department: string;
+
+    // a: number = 1;
+
+    assistCustomer(custName: string, bookTitle: string): void {
+        console.log(`${this.name} is assisting ${custName} with book ${bookTitle}`);
+    }
+}
+
+type PersonBook = Person & Book;
 // Task 02.01 Basic types
 // console.log(logFirstAvailable());
 // console.log(getBookTitlesByCategory(1));
@@ -329,6 +352,7 @@ class Encyclopedia extends ReferenceItem {
 //
 
 
+
 // Task 05.01. Creating and Using Classes
 // const ref = new ReferenceItem(1, 'Its title', 2022);
 // ref.printItem();
@@ -338,10 +362,20 @@ class Encyclopedia extends ReferenceItem {
 // console.log(ref);
 
 
-// Task 05.02. Extending Classes
-// const refBook = new Encyclopedia(1, 'Encyc', 2020, 3);
+// Task 05.02. Extending Classes, Task 05.03. Creating Abstract Classes
+// const refBook: Encyclopedia = new Encyclopedia(1, 'Encyc', 2020, 3);
 // refBook.printItem();
 // console.log(refBook.title);
+// refBook.printCitation();
 
 
-// Task 05.03. Creating Abstract Classes
+// Task 05.04. Interfaces for Class Types
+const favoriteLibrarian: Librarian = new UniversityLibrarian();
+// const favoriteLibrarian: Librarian & A = new UniversityLibrarian();
+favoriteLibrarian.name = 'Anna';
+favoriteLibrarian.assistCustomer('Bosir', 'Learn JS');
+// favoriteLibrarian.a = 2;
+
+
+// Task 05.05. Intersection and Union Types
+// const personalBook: PersonBook = new PersonBook('');
