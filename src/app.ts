@@ -23,6 +23,8 @@ enum Category {
 // };
 
 type BookProperties = keyof Book | 'isbn';
+type PersonBook = Person & Book;
+type BookOrUndefined = Book | undefined;
 interface Book {
     id: number;
     title: string;
@@ -34,6 +36,8 @@ interface Book {
     // markDamaged?(reason: string): void;
     markDamaged?: DamageLogger;
 };
+
+
 interface DamageLogger {
     (data: string): void;
 }
@@ -52,130 +56,140 @@ interface Librarian extends Person {
     assistCustomer: (custName: string, bookTitle: string) => void;
 }
 
+interface TOptions {
+    duration?: number;
+    speed?: number;
+}
 
 
-// function  getAllBooks(): readonly Book[] {
-//     const books = <const> [
-//         { id: 1, title: 'Refactoring JavaScript', category: Category.JavaScript, author: 'Evan Burchard', available:
-//         true},
-//         { id: 2, title: 'JavaScript Testing', category: Category.JavaScript, author: 'Liang Yuxian Eugene', available:
-//         false },
-//         { id: 3, title: 'CSS Secrets', category: Category.CSS, author: 'Lea Verou', available: true },
-//         { id: 4, title: 'Mastering JavaScript Object-Oriented Programming', category: Category.JavaScript, author: 'AndreaChiarelli', available: false }
-//     ];
-//     return books;
-// }
+function  getAllBooks(): readonly Book[] {
+    const books = <const> [
+        { id: 1, title: 'Refactoring JavaScript', category: Category.JavaScript, author: 'Evan Burchard', available:
+        true},
+        { id: 2, title: 'JavaScript Testing', category: Category.JavaScript, author: 'Liang Yuxian Eugene', available:
+        false },
+        { id: 3, title: 'CSS Secrets', category: Category.CSS, author: 'Lea Verou', available: true },
+        { id: 4, title: 'Mastering JavaScript Object-Oriented Programming', category: Category.JavaScript, author: 'AndreaChiarelli', available: false }
+    ];
+    return books;
+}
 
-// function logFirstAvailable(books: readonly Book[] = getAllBooks()): void{
-//     // const title: string = books.find(book => book.available).title;
-//     const title: string = books.find(({available}) => available)?.title;
-//     console.log(`Number of books: ${books.length} and first availible book is - ${title}`);
-// }
+function logFirstAvailable(books: readonly Book[] = getAllBooks()): void{
+    // const title: string = books.find(book => book.available).title;
+    const title: string = books.find(({available}) => available)?.title;
+    console.log(`Number of books: ${books.length} and first availible book is - ${title}`);
+}
 
-// function getBookTitlesByCategory(inputCategory: Category = Category.JavaScript): string[] {
-//     const books = getAllBooks();
+function getBookTitlesByCategory(inputCategory: Category = Category.JavaScript): string[] {
+    const books = getAllBooks();
 
-//     return books
-//         .filter(({category}) => category === inputCategory)
-//         .map(({ title }) => title);
-// }
-
-
-// function logBookTitles(titles: Array<string>): void {
-//     titles.forEach(title => console.log(title));
-// }
-
-// function getBookAuthorByIndex(index: number): [title: string, author: string] {
-//     const books = getAllBooks();
-
-//     const {title, author} = books[index];
-//     return [ title, author];
-// }
+    return books
+        .filter(({category}) => category === inputCategory)
+        .map(({ title }) => title);
+}
 
 
-// function calcTotalPages(): void {
-//     const pages = <const>[
-//         { lib: 'libName1', books: 1_000_000_000, avgPagesPerBook: 250 },
-//         { lib: 'libName2', books: 5_000_000_000, avgPagesPerBook: 300 },
-//         { lib: 'libName3', books: 3_000_000_000, avgPagesPerBook: 280 }];
+function logBookTitles(titles: Array<string>): void {
+    titles.forEach(title => console.log(title));
+}
 
-//     const total = pages.reduce((acc: bigint, obj) => {
-//         return acc + BigInt(obj.books) * BigInt(obj.avgPagesPerBook);
-//     }, 0n);
-//     console.log(total);
-// }
+function getBookAuthorByIndex(index: number): [title: string, author: string] {
+    const books = getAllBooks();
 
-// function getBookByID(inputID: Book['id']): Book | undefined{
-//     const books = getAllBooks();
-//     return books.find(book => book.id === inputID);
-// }
+    const {title, author} = books[index];
+    return [ title, author];
+}
 
-// function checkoutBooks(customer: string, ...bookIDs: number []): string[]{
-//     console.log(`Customer name: ${customer}`);
 
-//     return bookIDs
-//         .map(id => getBookByID(id))
-//         .filter(book => book.available)
-//         .map(book => book.title);
-// }
+function calcTotalPages(): void {
+    const pages = <const>[
+        { lib: 'libName1', books: 1_000_000_000, avgPagesPerBook: 250 },
+        { lib: 'libName2', books: 5_000_000_000, avgPagesPerBook: 300 },
+        { lib: 'libName3', books: 3_000_000_000, avgPagesPerBook: 280 }];
 
-// function createCustomerID(name: string, id: number): string {
-//     return `${name} ${id}`;
-// }
+    const total = pages.reduce((acc: bigint, obj) => {
+        return acc + BigInt(obj.books) * BigInt(obj.avgPagesPerBook);
+    }, 0n);
+    console.log(total);
+}
 
-// function createCustomer(name: string, age?: number, city?: string): void {
-//     console.log(`Name: ${name}`);
-//     if (age) {
-//         console.log(`Age: ${age}`);
-//     }
-//     if (city) {
-//         console.log(`City: ${city}`);
-//     }
-// }
+function getBookByID(inputID: Book['id']): BookOrUndefined{
+    const books = getAllBooks();
+    return books.find(book => book.id === inputID);
+}
 
-// function getTitles(author: string): string[];
-// function getTitles(available: boolean): string[];
-// function getTitles(id: number, available: boolean): string[];
-// function getTitles(...args: [string | boolean] | [number, boolean]): string[] {
-//     const books = getAllBooks();
+function checkoutBooks(customer: string, ...bookIDs: number []): string[]{
+    console.log(`Customer name: ${customer}`);
 
-//     if (args.length === 1) {
-//         const [arg] = args;
+    return bookIDs
+        .map(id => getBookByID(id))
+        .filter(book => book.available)
+        .map(book => book.title);
+}
 
-//         if (typeof arg === 'string') {
-//             return books.filter(book => book.author === arg).map(book => book.title);
-//         } else if (typeof arg === 'boolean') {
-//             return books.filter(book => book.available === arg).map(book => book.title);
-//         }
-//     } else if (args.length === 2) {
-//         const [id, available] = args;
+function createCustomerID(name: string, id: number): string {
+    return `${name} ${id}`;
+}
 
-//         if (typeof id === 'number' && typeof available === 'boolean') {
-//             return books.filter(book => book.id === id && book.available === available).map(book => book.title);
-//         }
-//     }
-// }
+function createCustomer(name: string, age?: number, city?: string): void {
+    console.log(`Name: ${name}`);
+    if (age) {
+        console.log(`Age: ${age}`);
+    }
+    if (city) {
+        console.log(`City: ${city}`);
+    }
+}
 
-// function assertStringValue(value: any): asserts value is string {
-//     if (typeof value !== 'string') {
-//         throw new TypeError('value should have been a string');
-//     }
-// }
+function getTitles(author: string): string[];
+function getTitles(available: boolean): string[];
+function getTitles(id: number, available: boolean): string[];
+function getTitles(...args: [string | boolean] | [number, boolean]): string[] {
+    const books = getAllBooks();
 
-// function bookTitleTransform(title: any): string {
-//     assertStringValue(title);
-//     return [...title].reverse().join('');
-// }
+    if (args.length === 1) {
+        const [arg] = args;
 
-// function printBook(book: Book): void {
-//     console.log(`${book.title} ${book.author}`);
-// }
+        if (typeof arg === 'string') {
+            return books.filter(book => book.author === arg).map(book => book.title);
+        } else if (typeof arg === 'boolean') {
+            return books.filter(book => book.available === arg).map(book => book.title);
+        }
+    } else if (args.length === 2) {
+        const [id, available] = args;
 
-// function getProperty(book: Book, bookProperty: BookProperties ): any {
-//     const value = book[bookProperty];
+        if (typeof id === 'number' && typeof available === 'boolean') {
+            return books.filter(book => book.id === id && book.available === available).map(book => book.title);
+        }
+    }
+}
 
-//     return typeof value === 'function' ? value.name : value;
-// }
+function assertStringValue(value: any): asserts value is string {
+    if (typeof value !== 'string') {
+        throw new TypeError('value should have been a string');
+    }
+}
+
+function bookTitleTransform(title: any): string {
+    assertStringValue(title);
+    return [...title].reverse().join('');
+}
+
+function printBook(book: Book): void {
+    console.log(`${book.title} ${book.author}`);
+}
+
+function getProperty(book: Book, bookProperty: BookProperties ): any {
+    const value = book[bookProperty];
+
+    return typeof value === 'function' ? value.name : value;
+}
+
+function setDefaultConfig(options: TOptions) {
+    options.duration ??= 100;
+    options.speed ??= 60;
+    // return options;
+}
 
 abstract class ReferenceItem {
     // title: string;
@@ -250,7 +264,7 @@ class UniversityLibrarian implements Librarian /* , A */ {
     }
 }
 
-type PersonBook = Person & Book;
+
 // Task 02.01 Basic types
 // console.log(logFirstAvailable());
 // console.log(getBookTitlesByCategory(1));
@@ -370,12 +384,26 @@ type PersonBook = Person & Book;
 
 
 // Task 05.04. Interfaces for Class Types
-const favoriteLibrarian: Librarian = new UniversityLibrarian();
+// const favoriteLibrarian: Librarian = new UniversityLibrarian();
 // const favoriteLibrarian: Librarian & A = new UniversityLibrarian();
-favoriteLibrarian.name = 'Anna';
-favoriteLibrarian.assistCustomer('Bosir', 'Learn JS');
+// favoriteLibrarian.name = 'Anna';
+// favoriteLibrarian.assistCustomer('Bosir', 'Learn JS');
 // favoriteLibrarian.a = 2;
 
 
 // Task 05.05. Intersection and Union Types
-// const personalBook: PersonBook = new PersonBook('');
+// const personBook: PersonBook = {
+//     name: 'Alex',
+//     author: 'Author',
+//     available: false,
+//     category: Category.Angular,
+//     email: 'ema@il.com',
+//     id: 1,
+//     title: 'Unknown'
+// };
+
+// const options: TOptions = { duration: 20};
+// const options2 = setDefaultConfig(options);
+// console.log(options);
+// console.log(options2);
+
