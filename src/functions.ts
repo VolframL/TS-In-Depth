@@ -3,7 +3,7 @@
 import { Book, TOptions } from './interfaces';
 import { Category } from './enums';
 import { BookOrUndefined,BookProperties } from './types';
-import RefBook from './encyclopedia';
+import RefBook from './classes/encyclopedia';
 
 export function  getAllBooks(): readonly Book[] {
     const books = <const> [
@@ -134,6 +134,12 @@ export function getProperty(book: Book, bookProperty: BookProperties ): any {
     return typeof value === 'function' ? value.name : value;
 }
 
+export function getObjectProperty<TObject, TKey extends keyof TObject>(obj: TObject, prop: TKey): TObject[TKey] | string {
+    const value = obj[prop];
+
+    return typeof value === 'function' ? value.name : value;
+}
+
 export function setDefaultConfig(options: TOptions) {
     options.duration ??= 100;
     options.speed ??= 60;
@@ -143,4 +149,8 @@ export function setDefaultConfig(options: TOptions) {
 export function printRefBook(data: any): void {
     assertRefBookInstance(data instanceof RefBook);
     data.printItem();
+}
+
+export function purge<T>(inventory: T[]): Array<T> {
+    return inventory.slice(2);
 }

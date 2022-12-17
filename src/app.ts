@@ -1,8 +1,15 @@
-import { Book, Logger, Author, Librarian } from './interfaces';
-import { UniversityLibrarian, ReferenceItem } from './classes';
+
+import { ReferenceItem, RefBook, UL, Shelf } from './classes';
+import type { Library } from './classes/library';
+import { Book, Logger, Author, Librarian, Magazine } from './interfaces';
+// import { UniversityLibrarian, ReferenceItem } from './classes/universityLibrarian.ts';
+
 import { PersonBook } from './types';
-import { getTitles, printRefBook } from './functions';
-import RefBook from './encyclopedia';
+import { purge, getAllBooks, getTitles, printRefBook, getObjectProperty } from './functions';
+// import { Library } from './classes/library';
+
+import { Category } from './enums';
+
 
 showHello('greeting', 'TypeScript');
 
@@ -131,8 +138,8 @@ function showHello(divName: string, name: string) {
 
 
 // Task 05.04. Interfaces for Class Types
-// const favoriteLibrarian: Librarian = new UniversityLibrarian();
-// const favoriteLibrarian: Librarian & A = new UniversityLibrarian();
+// const favoriteLibrarian: Librarian = new UL.UniversityLibrarian();
+// const favoriteLibrarian: Librarian & A = new UL.UniversityLibrarian();
 // favoriteLibrarian.name = 'Anna';
 // favoriteLibrarian.assistCustomer('Bosir', 'Learn JS');
 // favoriteLibrarian.a = 2;
@@ -155,11 +162,109 @@ function showHello(divName: string, name: string) {
 // console.log(options2);
 
 
-// Task 06.03. Default Export
-const refBook: RefBook = new RefBook(2, 'Learn JS', 2020, 5);
-printRefBook(refBook);
-const favoriteLibrarian: Librarian = new UniversityLibrarian();
-printRefBook(favoriteLibrarian);
+// Task 06.03. Default Export  && Task 06.04. Re-Export
+// const refBook: RefBook = new RefBook(2, 'Learn JS', 2020, 5);
+// printRefBook(refBook);
+// const favoriteLibrarian: Librarian = new UL.UniversityLibrarian();
+// printRefBook(favoriteLibrarian);
 
 
-// Task 06.04. Re-Export
+// Task 06.05. Dynamic Import Expression
+// const flag = true;
+
+// if (flag) {
+//     import('./classes')
+//         .then(o => {
+//             const reader = new o.Reader();
+//             reader.name = 'Anna';
+//             reader.take(getAllBooks()[0]);
+//             console.log(reader);
+//         })
+//         .catch(err => console.log(err))
+//         .finally(() => console.log('Complete'));
+// }
+
+// if (flag) {
+//     const o = await import('./classes');
+
+//     const reader = new o.Reader();
+//     reader.name = 'Anna';
+//     reader.take(getAllBooks()[0]);
+
+//     console.log(reader);
+// }
+
+
+// Task 06.06. Type-Only Imports and Exports
+// let library: Library = new Library();
+// library.address = 'aaa';
+// console.log(library);
+
+// let lib: Library = {
+//     address: 'saskj',
+//     id: 2,
+//     name: 'sjs'
+// };
+// console.log(lib);
+
+
+// Task 07.01. Generic Functions
+const inventory: Book[] = [
+    {
+        id: 10,
+        title: 'The C Programming Language',
+        author: '???',
+        available: true,
+        category: Category.Software
+    },
+    {
+        id: 11,
+        title: 'Code Complete',
+        author: 'Steve McConnell',
+        available: true,
+        category: Category.Software
+    },
+    {
+        id: 12,
+        title: '8-Bit Graphics with Cobol',
+        author: 'A. B.',
+        available: true,
+        category: Category.Software
+    },
+    {
+        id: 13,
+        title: 'Cool autoexec.bat Scripts!',
+        author: 'C. D.',
+        available: true,
+        category: Category.Software }
+];
+
+// const result = purge<Book>(inventory);
+// console.log(result);
+
+// const array = [1, 2, 3];
+
+// const res2 = purge(array);
+
+
+// Task 07.02. Generic Interfaces and Classes, Task 07.03. Generic Constraints
+// const bookShelf: Shelf<Book> = new Shelf<Book>();
+// const bookShelf = new Shelf<Book>();
+// inventory.forEach(book => bookShelf.add(book));
+// console.log(bookShelf.getFirst().title);
+
+const magazines: Magazine[] = [
+    { title: 'Programming Language Monthly', publisher: 'Code Mags' },
+    { title: 'Literary Fiction Quarterly', publisher: 'College Press' },
+    { title: 'Five Points', publisher: 'GSU' },
+];
+
+// const magazineShelf = new Shelf<Magazine>();
+// magazines.forEach(magazine => magazineShelf.add(magazine));
+// console.log(magazineShelf.getFirst());
+
+// magazineShelf.printTitles();
+// console.log(magazineShelf.find('Five Points'));
+
+console.log(getObjectProperty(magazines[0], 'publisher'));
+console.log(getObjectProperty(inventory[2], 'title'));
