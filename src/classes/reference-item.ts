@@ -1,5 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 
+import { timeout } from '../decorators';
 import * as Interfaces from '../interfaces';
 
 abstract class ReferenceItem {
@@ -30,6 +31,8 @@ abstract class ReferenceItem {
       console.log('Creating a new ReferenceItem...');
       this.#id = id;
   }
+
+  @timeout(2000)
   printItem(): void {
       console.log(`${this.title} was published in ${this.year}`);
       console.log(ReferenceItem.department);
