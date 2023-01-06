@@ -5,7 +5,7 @@ import { Book, Logger, Author, Librarian, Magazine } from './interfaces';
 // import { UniversityLibrarian, ReferenceItem } from './classes/universityLibrarian.ts';
 
 import { BookRequiredFields, CreateCustomerFunctionType, PersonBook, UpdatedBook } from './types';
-import { purge, getAllBooks, getTitles, printRefBook, getObjectProperty, createCustomer } from './functions';
+import { purge, getAllBooks, getTitles, printRefBook, getObjectProperty, createCustomer, getBooksByCategory, logCategorySearch, getBooksByCategoryPromise, logSearchResults } from './functions';
 // import { Library } from './classes/library';
 
 import { Category } from './enums';
@@ -320,3 +320,47 @@ function showHello(divName: string, name: string) {
 // console.log(favoriteLibrarian);
 // favoriteLibrarian.name = 'Anna';
 // favoriteLibrarian.assistCustomer('Boris', 'Learn TS');
+
+
+// Task 08.06. Property Decorator
+// const favoriteLibrarian = new UL.UniversityLibrarian();
+// favoriteLibrarian.name = 'Anna';
+// console.log(favoriteLibrarian);
+// favoriteLibrarian.assistCustomer('Boris', 'Learn TS');
+
+
+// Task 08.07. Accessor Decorator
+// const refBook: RefBook = new RefBook(2, 'Learn JS', 2020, 5);
+// refBook.copies = 10;
+// console.log(refBook.copies);
+
+
+// Task 09.01. Callback Functions
+// console.log('Begin');
+// getBooksByCategory(Category.JavaScript, logCategorySearch);
+// getBooksByCategory(Category.Software, logCategorySearch);
+// console.log('End');
+
+
+// Task 09.02. Promises
+// console.log('Begin');
+// getBooksByCategoryPromise(Category.JavaScript)
+//     .then(titles => {
+//         console.log(titles);
+//         return Promise.resolve(titles.length);
+//     })
+//     .then(n => console.log('Quantity: '+n))
+//     .catch(reason => console.log(reason));
+// getBooksByCategoryPromise(Category.Software)
+//     .then(titles => console.log(titles))
+//     .catch(reason => console.log(reason));
+// console.log('End');
+
+
+// Task 09.03. Async Functions
+// console.log('Begin');
+
+// logSearchResults(Category.JavaScript);
+// logSearchResults(Category.Software).catch(err => console.log(err));
+
+// console.log('End');
